@@ -12,9 +12,6 @@ if ~exist(image_path, 'dir')
    mkdir(image_path)
 end
 
-%% check if shaded error bar is available
-if exist([workspace_path '/+functions/
-
 %% check visualtion
 % if the script is started stand alone, you have to chose which 
 % results have to be visualized
