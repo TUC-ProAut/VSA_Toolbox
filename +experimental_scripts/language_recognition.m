@@ -1,4 +1,40 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This file is part of VSA_Toolbox.                                       %
+%                                                                         %
+% Copyright (C) 2020 Chair of Automation Technology / TU Chemnitz         %
+% For more information see https://www.tu-chemnitz.de/etit/proaut/vsa     %
+%                                                                         %
+% VSA_Toolbox is free software: you can redistribute it and/or modify     %
+% it under the terms of the GNU General Public License as published by    %
+% the Free Software Foundation, either version 3 of the License, or       %
+% (at your option) any later version.                                     %
+%                                                                         %
+% VSA_Toolbox is distributed in the hope that it will be useful,          %
+% but WITHOUT ANY WARRANTY; without even the implied warranty of          %
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           %
+% GNU General Public License for more details.                            %
+%                                                                         %
+% You should have received a copy of the GNU General Public License       %
+% along with Foobar.  If not, see <http://www.gnu.org/licenses/>.         %
+%                                                                         %
+% Author: Kenny Schlegel (kenny.schlegel@etit.tu-chemnitz.de)             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 function [acc, VSA] = language_recognition(vsa, dim, num_ngrams)
+%   perform the language recognition experiment 
+%   
+%   INPUT:
+%       VSA:                VSA object (vsa_env)
+%       dim:                Dimesnion
+%       num_ngrams:         number of letters in ngram
+%   OUTPUT:
+%       acc:                accuracy
+%       VSA:                VSA object (vsa_env)
+%
+% scken, 2020
+
 
 % load data from TUC server
 workspace_path = mfilename('fullpath');
