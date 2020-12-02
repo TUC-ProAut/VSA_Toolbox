@@ -52,7 +52,7 @@ function gen_vecs = generate_vectors(varargin)
     if p.Results.density == -1
         % define default density
         switch vsa
-             case {'BSDC', 'BSDC_test','BSDC_SHIFT'}
+             case {'BSDC', 'BSDC_test','BSDC_SHIFT','BSDC_THIN'}
                  density=1/sqrt(dim);  % density computing is optains from rachkovskji (most capacity and good stability)
              case 'BSDC_25'
                  density=0.25;

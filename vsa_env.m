@@ -65,7 +65,7 @@ classdef vsa_env < handle
             % define default density
             if p.Results.density == -1
                 switch p.Results.vsa
-                     case {'BSDC', 'BSDC_test','BSDC_SHIFT'}
+                     case {'BSDC', 'BSDC_test','BSDC_SHIFT','BSDC_THIN'}
                          density=1/sqrt(obj.dim);  % density computing is optains from rachkovskji (most capacity and good stability)
                      case 'BSDC_25'
                          density=0.25;

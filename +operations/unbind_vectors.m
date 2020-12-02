@@ -64,7 +64,7 @@ switch vsa
     case {'BSDC'}
         % find the most similar item in item_mem  
         disp('There is no specific unbind operator for the selected VSA - use the finding of the most similar vectors in item memory instead!');
-    case {'BSDC_SHIFT','BSDC_25'}
+    case {'BSDC_SHIFT','BSDC_25','BSDC_THIN'}
         % calculate the shift number (sum of all ones-index)
         idx = [1:size(vectors_1,1)]*vectors_1;
         % shift each column with specific index number

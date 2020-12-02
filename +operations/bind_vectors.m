@@ -68,7 +68,7 @@ switch vsa
         % CDT
         Z=operations.cdt(values_disj,50,1/sqrt(size(vectors_1,1)));
         bound_vectors = Z;
-    case {'BSDC_SHIFT','BSDC_25'}
+    case {'BSDC_SHIFT','BSDC_25','BSDC_THIN'}
         % calculate the shift number (sum of all ones-index)
         idx = [1:size(vectors_1,1)]*vectors_1;
         % shift each column with specific index number                             

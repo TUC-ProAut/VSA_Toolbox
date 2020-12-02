@@ -83,3 +83,7 @@ for it=1:number_iterations
     prob_correct_tensor(:,:,it)= prob_correct_array;
 
 end
+
+% compute mean and variance    
+results_capacity_mean{i}=[results_capacity_mean{i}; mean(prob_correct_tensor,3)];
+results_capacity_var{i}=[results_capacity_var{i}; var(prob_correct_tensor,1,3)];
