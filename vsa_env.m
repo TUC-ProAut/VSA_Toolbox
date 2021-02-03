@@ -190,22 +190,26 @@ classdef vsa_env < handle
                 k=1;
             end
             sim_vec = obj.sim(obj.item_mem{1,1},vectors_in);
-            sim_vec_sort=sort(sim_vec,'descend'); 
-            s_highest=sim_vec_sort(1:k);
-            isMember=ismember(sim_vec,s_highest);
-            idx=find(isMember);
+            [sim_vec_sort, idx]=sort(sim_vec,'descend'); 
+            s_highest=sim_vec_sort(1:k,:);
+%             isMember=ismember(sim_vec,s_highest);
+%             idx=find(isMember);
+            rows = idx(1:k,:);
          
             % if there are more then k indexes, select randomly k from it
-            if numel(idx)>=k
-                idx=datasample(idx,k,'Replace',false);
-            end
-            
+%             if numel(idx)>=k
+%                 idx=datasample(idx,k,'Replace',false);
+%             end
             
             names = obj.item_mem{1,2};
-            names = names(idx,:);
+            names = names(rows,:);
+            names = reshape(names,[k,size(vectors_in,2)]);
             vecs  = obj.item_mem{1,1};  
-            vectors = vecs(:,idx);
-            s     = sim_vec(idx);
+            vectors = vecs(:,rows);
+            vectors = reshape(vectors,[size(vectors,1),k,size(vectors_in,2)]);
+            s     = sim_vec(rows);
+            s = reshape(s,[k,size(vectors_in,2)]);
+            
             
         end
 

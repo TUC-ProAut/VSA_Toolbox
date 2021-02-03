@@ -77,21 +77,19 @@ function gen_vecs = generate_vectors(varargin)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % MAP
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                     
-        case {'map','MAP_C'} % Gaylers Multiplication, Addition and Permutaiton Architecture
+        case {'MAP_C'} % Gaylers Multiplication, Addition and Permutaiton Architecture
        
             rand_values = double(rand([dim num]));
 
             gen_vecs = double(rand_values)*2-1;
+            % quantize to 4 bits
+%             gen_vecs = quantize(fi(gen_vecs),numerictype(1,8,4));
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % BSC
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                     
         case {'BSC'}
-            
-            rand_values = double(rand([dim num]));
-         
-            % set values
-            gen_vecs = double(rand_values>1-density)*1;
+            gen_vecs = binornd(1,0.5,[dim num]);
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % BSDC
@@ -147,7 +145,8 @@ function gen_vecs = generate_vectors(varargin)
             rand_values=double(rand([dim num]));
          
             % set values
-            gen_vecs=double(rand_values*2*pi-pi);                     
+            gen_vecs=double(rand_values*2*pi-pi);   
+            
          
         otherwise
             disp('Representation is not defined!')
