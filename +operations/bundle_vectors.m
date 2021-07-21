@@ -26,6 +26,8 @@ function bundled_vectors = bundle_vectors(vsa, vectors_1, vectors_2, varargin)
  % INPUT:
  %      vsa:                VSA type
  %      vectors_1:          vectors to bundle (column-wise vector array)
+ %                          if array has more than 2 dimensions, the last
+ %                          dimension is used for addition
  %      vectors_2:          vectors to bundle (column-wise vector array)
  %      normalize:          if set (bool), the resulting vector will be
  %                          normalized after bundling (default if true)
@@ -57,11 +59,13 @@ max_density = p.Results.max_density;
 % concatenate the two input vectors 
 vector_array=[vectors_1, vectors_2];
 dim = size(vector_array,1);
+
+n_dim = numel(size(vectors_1));
  
      switch vsa
         case 'MAP_B'
             % majority rule
-            values=sum(vector_array,2);
+            values=sum(vector_array,n_dim);
             if normalize
                 values(find(values<-1))=-1;
                 values(find(values>1))=1;
@@ -70,7 +74,7 @@ dim = size(vector_array,1);
             end
             bundled_vectors = values;
         case {'MAP_C'}
-            values=sum(vector_array,2);
+            values=sum(vector_array,n_dim);
             if normalize
                 % normalization of bundeld vectors
                 values(find(values>1))=1;
@@ -79,9 +83,9 @@ dim = size(vector_array,1);
             bundled_vectors = values;
         case {'MAP_I'}
             % sum
-            bundled_vectors = sum(vector_array,2);
+            bundled_vectors = sum(vector_array,n_dim);
         case {'BSC'}
-            values=sum(vector_array,2);
+            values=sum(vector_array,n_dim);
             if normalize
                 % check if number of vectors is odd (apply majority rule)
                 number_vec=size(vector_array,2);
@@ -102,13 +106,13 @@ dim = size(vector_array,1);
             bundled_vectors = values;
         case {'BSDC'}
             % elementwise disjunction
-            bundled_vectors = double(sum(vector_array,2)>=1);        
+            bundled_vectors = double(sum(vector_array,n_dim)>=1);        
         case {'BSDC_THIN'}
             % elementwise disjunction
             max_density = 0.5;
             k = floor(max_density*size(vector_array,1));
 
-            values = sum(vector_array,2);            
+            values = sum(vector_array,n_dim);            
             if normalize
                 bundled_vectors = zeros([size(vector_array,1) 1]);
                 [~, idx] = maxk(values,k);
@@ -118,7 +122,7 @@ dim = size(vector_array,1);
             end
         case {'HRR', 'HRR_VTB','MBAT'}
             % elementwise addition 
-            values = sum(vector_array,2);
+            values = sum(vector_array,n_dim);
             if normalize 
                 values = values/norm(values);
             end
@@ -138,13 +142,13 @@ dim = size(vector_array,1);
                 complex_vectors_2 = vectors_2;
             end
             complex_vector_array = [complex_vectors_1, complex_vectors_2];
-            values = sum(complex_vector_array,2);
+            values = sum(complex_vector_array,n_dim);
             if normalize
                 values = angle(values);
             end
             bundled_vectors = values;
         case 'FHRR_full'
-            values = sum(vector_array,2);
+            values = sum(vector_array,n_dim);
             if normalize
                  values = normalize(values);
             end
@@ -154,7 +158,7 @@ dim = size(vector_array,1);
             % select the k highest values (k is computed with the density)
             k = floor(max_density*size(vector_array,1));
             
-            values = sum(vector_array,2);
+            values = sum(vector_array,n_dim);
             if normalize
                 bundled_vectors = zeros([size(vector_array,1) 1]);
                 [~, idx] = maxk(values,k);
@@ -167,7 +171,7 @@ dim = size(vector_array,1);
             size_segments = floor(dim/num_segments);
             k = floor(max_density*size_segments);
             
-            values = sum(vector_array,2);
+            values = sum(vector_array,n_dim);
                       
             if normalize
                 values_segments = reshape(values(1:size_segments*num_segments),[size_segments, num_segments]);
