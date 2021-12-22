@@ -3,8 +3,7 @@
 The VSA_toolbox is a MATLAB implementation to develop and apply different kinds of VSA within one environment.
 It is also the source code to the paper [1].
 
-[1] K. Schlegel, P. Neubert, and P. Protzel, “A comparison of Vector Symbolic Architectures,” 2020, https://arxiv.org/abs/2001.11797
-
+[1] K. Schlegel, P. Neubert, and P. Protzel, “A comparison of vector symbolic architectures,” Artif. Intell. Rev., Dec. 2021.
 
 
 ## Requirements
