@@ -38,30 +38,28 @@ function [sim_matrix] = compute_sim(vsa,vectors_1,vectors_2)
 
     sim_matrix = zeros([size(vectors_1,1) size(vectors_2,1)]);
 
+    warning('off')
     switch vsa 
-      case {'MAP_B','MAP_C','HRR','HRR_VTB','NONE','MAP_I','MBAT','Proj'}
+      case {'MAP_B','MAP_C','HRR','HRR_VTB','NONE','MAP_I','MBAT','Proj','FHRR_cos'}
           % cosine similarity 
-          sim_matrix = 1-pdist2(vectors_1,vectors_2,'cosine');          
+          sim_matrix = (vectors_1./sqrt(sum(vectors_1.^2,2)))*(vectors_2./sqrt(sum(vectors_2.^2,2)))';
       case 'BSC'
           % hamming distance
-          sim_matrix = 1-pdist2(vectors_1,vectors_2,'hamming')*2;
+          sim_matrix = 1-pdist2(vectors_1,vectors_2,'hamming');
       case {'BSDC','BSDC_SHIFT','BSDC_25', 'BSDC_SEG','BSDC_THIN'}
-          % overlap (normalized by hamming weight)
-%           density = round(mean([sum(vectors_1,2); sum(vectors_2,2)]));
+          % overlap 
           vectors_1 = vectors_1>0;
           vectors_2 = vectors_2>0;
           sim_matrix = vectors_1*vectors_2';
-%           sim_matrix = sim_matrix./density;
-      case {'FHRR','FHRR_fft'}
+      case {'FHRR_fft','FHRR'}
           % average of cosine of distance
 
           % convert to complex values
-          v1_c = exp(vectors_1*1i);
-          v2_c = exp(-vectors_2*1i);
-
-          sim_matrix = real(conj(v1_c)*v2_c')/size(vectors_1,2);
+          sim_matrix = real(exp(vectors_1*1i)*exp(vectors_2*1i)')/size(vectors_1,2);
       otherwise
           disp('Representation is not defined!')
     end
+
+    warning('on')
 
 end

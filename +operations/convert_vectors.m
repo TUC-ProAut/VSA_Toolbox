@@ -71,22 +71,10 @@ switch vsa
     case {'HRR', 'HRR_VTB','MBAT'}
         % convert 
         values=normr(Y);
-    case {'FHRR_fft'}
+    case {'FHRR'}
         % convert 
         values=angle(fft(Y,size(Y,2),2));
-    case {'FHRR'} 
-        % convert 
-        values=Y;
-        pd = makedist('Normal','mu',mean(Y(:)),'sigma',sqrt(var(Y(:))));
-        values=cdf(pd,Y(:))*2*pi-pi;
-        values=reshape(values,size(Y,1),[]);
-    case 'FHRR_full'
-        % convert 
-        values=Y;
-        parfor i=1:size(Y,1)
-            values(i,:)=fft(double(Y(i,:)));
-        end
-    case {'BSDC','BSDC_test','BSDC_SHIFT','BSDC_SEG','BSDC_25'}
+    case {'BSDC','BSDC_SHIFT','BSDC_SEG'}
         % project values
         values = functions.get_sLSBH(Y,density); 
     case {'NONE', 'Proj.'}

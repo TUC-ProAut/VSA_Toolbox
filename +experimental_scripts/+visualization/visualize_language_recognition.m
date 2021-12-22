@@ -40,14 +40,14 @@ for i=1:size(vsa_dict,1)
             if counter>7, marker = '-.'; end
             L=plot(dim_range_lang(1:end-1),smooth(results_langRec{i}(1:end-1),3),marker,'color',cmap(counter,:), 'LineWidth',1.2);
             lines=[lines; L];
-            leg={leg{:} strrep(vsa_dict{i,1},'_',' ')};
+            leg={leg{:} names_mapping_lang_rec(vsa_dict{i,1})};
             hold on;
             counter = counter+1;
     end
     
 end
 
-title(['Accuracy in Language Recognition experiment wiht increasing number of dimensions'],'FontWeight','bold', 'FontSize',16, 'FontName','Times New Roman');
+title(['Accuracy in Language Recognition experiment with increasing number of dimensions'],'FontWeight','bold', 'FontSize',16, 'FontName','Times New Roman');
 xlabel('Number of dimensions')
 ylabel('Accuracy')
 xlim([1 2116])

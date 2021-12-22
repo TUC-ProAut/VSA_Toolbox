@@ -68,7 +68,7 @@ switch vsa
         % CDT
         Z=operations.cdt(values_disj,50,1/sqrt(size(vectors_1,1)));
         bound_vectors = Z;
-    case {'BSDC_SHIFT','BSDC_25','BSDC_THIN'}
+    case {'BSDC_SHIFT'}
         % calculate the shift number (sum of all ones-index)
         idx = [1:size(vectors_1,1)]*vectors_1;
         % shift each column with specific index number                             
@@ -101,13 +101,9 @@ switch vsa
             end
             bound_vectors(:,i) = sqrt(sub_d)*(V_x*val_y(:,i));
         end
-    case {'FHRR','FHRR_fft'}
+    case {'FHRR'}
         % elementwise complex multiplication 
         bound_vectors = wrapToPi(bsxfun(@plus,vectors_1,vectors_2));
-    case 'FHRR_full'
-         % convolution --> multiplicatioin
-         complex_product=vectors_1.*vectors_2;
-         bound_vectors=complex_product;
     case 'BSDC_SEG'
         % sparse vectors with segements   
         dim = size(vectors_1,1);

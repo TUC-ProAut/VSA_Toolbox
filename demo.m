@@ -3,7 +3,7 @@ clear all
 close all
 
 % create the object of a specific VSA type
-type = 'MAP_B'; % available types: 'MAP_C'; 'MAP_B'; 'MAP_I'; 'BSC'; 'BSDC'; 'BSDC_SHIFT'; 'HRR'; 'HRR_VTB'; 'FHRR'
+type = 'MAP_B'; % available types: 'MAP_C'; 'MAP_B'; 'MAP_I'; 'BSC'; 'BSDC'; 'BSDC_SHIFT'; 'BSDC_SEG'; 'HRR'; 'HRR_VTB'; 'FHRR'
 VSA = vsa_env('vsa',type,'dim',1024);
 
 % add vectors to item memory (randomly chosen)

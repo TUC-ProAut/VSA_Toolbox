@@ -41,7 +41,7 @@ prob_correct_tensor=zeros([numel(dim_range_pairs),numel(k_range),number_iteratio
 
 
 for it=1:number_iterations
-    prob_correct_array=[];        
+    prob_correct_array = zeros([numel(dim_range_pairs),numel(k_range)]);       
 
     disp(['iteration: ' num2str(it)])
 
@@ -90,7 +90,7 @@ for it=1:number_iterations
 
         end
         
-        prob_correct_array=[prob_correct_array; prob_correct];
+        prob_correct_array(d_idx,:) = prob_correct_answer;
 
     end
 

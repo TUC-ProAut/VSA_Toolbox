@@ -64,7 +64,7 @@ switch vsa
     case {'BSDC'}
         % find the most similar item in item_mem  
         disp('There is no specific unbind operator for the selected VSA - use the finding of the most similar vectors in item memory instead!');
-    case {'BSDC_SHIFT','BSDC_25','BSDC_THIN'}
+    case {'BSDC_SHIFT'}
         % calculate the shift number (sum of all ones-index)
         idx = [1:size(vectors_1,1)]*vectors_1;
         % shift each column with specific index number
@@ -96,21 +96,9 @@ switch vsa
             end
             unbound_vectors(:,i) = sqrt(sub_d)*V_x*val_y(:,i);
         end
-    case {'FHRR','FHRR_fft'}
+    case {'FHRR'}
         % complex multiplication with negative 'role' vector
         unbound_vectors = wrapToPi(bsxfun(@minus,vectors_2,vectors_1));
-    case 'FHRR_full'
-        % inverse is like division in frequence domain
-        inv_values=vector_array./obj.values;                 
-        % check if nan is in result
-        idx_nan=find(isnan(inv_values)==1);
-        % replace nan with 0
-        inv_values(idx_nan)=0*i;
-        %check if inf in result
-        idx_inf=find(isinf(inv_values)==1);
-        % replace inf with 1
-        inv_values(idx_inf)=0*i;
-        unbound_vectors = inv_values;
     case 'BSDC_SEG'
         % sparse vectors with segements
          

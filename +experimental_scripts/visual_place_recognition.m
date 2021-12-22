@@ -70,8 +70,7 @@ for d=1:size(evals,1)
            mkdir(results_path)
     end
 
-    dataset_path = '/home/scken/Dokumente/Data_Sets/place_recognition/';
-%     dataset_path = '/panas/datasets/place_recognition/benchmark/';
+    dataset_path = 'datasets/';
     
     names_mapping = containers.Map;
     names_mapping('NONE')='orig. Encoding';

@@ -53,7 +53,7 @@ classdef vsa_env < handle
             parse(p,varargin{:});
 
             % check if vsa is defined
-            availabel_VSAs = {'MAP_C'; 'MAP_B'; 'MAP_I'; 'BSC'; 'BSDC'; 'BSDC_SHIFT'; 'HRR'; 'HRR_VTB'; 'FHRR'; 'FHRR_fft';'BSDC_SEG';'MBAT'; 'BSDC_25';'BSDC_THIN'};
+            availabel_VSAs = {'MAP_C'; 'MAP_B'; 'MAP_I'; 'BSC'; 'BSDC'; 'BSDC_SHIFT'; 'HRR'; 'HRR_VTB'; 'FHRR'; 'BSDC_SEG';'MBAT'};
             assert(any(strcmp(availabel_VSAs,p.Results.vsa)),['The selected VSA is not defined. Please chose one out of ' cell2mat(join(availabel_VSAs))]);
             
             obj.dim = p.Results.dim;
@@ -65,7 +65,7 @@ classdef vsa_env < handle
             % define default density
             if p.Results.density == -1
                 switch p.Results.vsa
-                     case {'BSDC', 'BSDC_test','BSDC_SHIFT','BSDC_THIN'}
+                     case {'BSDC', 'BSDC_SHIFT'}
                          density=1/sqrt(obj.dim);  % density computing is optains from rachkovskji (most capacity and good stability)
                      case 'BSDC_25'
                          density=0.25;
@@ -110,12 +110,14 @@ classdef vsa_env < handle
             default_num      = 1;
             default_vec      = 0;
             default_add_item = 1;
+            default_return   = 1;
             p=inputParser;
 
             addOptional(p, 'vec', default_vec)
             addOptional(p, 'name', default_name)
             addOptional(p, 'num', default_num)
             addOptional(p, 'add_item', default_add_item)
+            addOptional(p, 'return_vector', default_return)
 
             parse(p,varargin{:});
 
@@ -123,7 +125,7 @@ classdef vsa_env < handle
             
             
             if p.Results.vec==0 
-                % no vectors given, generate radom vectors
+                % no input vectors given, generate radom vectors
                 vectors = operations.generate_vectors('vsa',obj.vsa,'dim',obj.dim,'num',num, 'density',obj.density);  
             else
                 vectors = p.Results.vec;
@@ -143,6 +145,11 @@ classdef vsa_env < handle
                     obj.item_mem{1,2} = cat(1,[names(:); cellstr(p.Results.name)]);           
                 end
             end
+            
+            % return vectors only if param is set
+            if p.Results.return_vector == 0
+                clear vectors;
+            end
         end
       
         function [sim_matrix] = sim(obj,vectors_1,vectors_2)
@@ -161,7 +168,7 @@ classdef vsa_env < handle
         end
         
         function bundled_vectors = bundle(obj, vectors_1, vectors_2, normalize)
-            % unbind vectors_1 and vectors_2 --> see function unbind_vectors.m
+            % bundle vectors_1 and vectors_2 --> see function bundle_vectors.m
             if nargin <= 3
                 bundled_vectors = operations.bundle_vectors(obj.vsa, vectors_1, vectors_2, 'density', obj.density, 'max_density', obj.max_density);
             else
@@ -192,14 +199,8 @@ classdef vsa_env < handle
             sim_vec = obj.sim(obj.item_mem{1,1},vectors_in);
             [sim_vec_sort, idx]=sort(sim_vec,'descend'); 
             s_highest=sim_vec_sort(1:k,:);
-%             isMember=ismember(sim_vec,s_highest);
-%             idx=find(isMember);
+
             rows = idx(1:k,:);
-         
-            % if there are more then k indexes, select randomly k from it
-%             if numel(idx)>=k
-%                 idx=datasample(idx,k,'Replace',false);
-%             end
             
             names = obj.item_mem{1,2};
             names = names(rows,:);

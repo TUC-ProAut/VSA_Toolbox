@@ -72,16 +72,16 @@ function gen_vecs = generate_vectors(varargin)
         % MAP and MBAT
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         case {'MAP_B','MAP_I'} % Gaylers Multiplication, Addition and Permutaiton Architecture with bipolar vector space {-1,1}
-            gen_vecs = binornd(1,0.5,[dim num])*2-1;
+%             gen_vecs = binornd(1,0.5,[dim num])*2-1;
+            gen_vecs = single(rand([dim num],'single')>0.5)*2-1;
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % MAP
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                     
         case {'MAP_C'} % Gaylers Multiplication, Addition and Permutaiton Architecture
        
-            rand_values = double(rand([dim num]));
-
-            gen_vecs = double(rand_values)*2-1;
+            gen_vecs = rand([dim num],'single')*2-1;
+            
             % quantize to 4 bits
 %             gen_vecs = quantize(fi(gen_vecs),numerictype(1,8,4));
 
@@ -89,14 +89,15 @@ function gen_vecs = generate_vectors(varargin)
         % BSC
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                     
         case {'BSC'}
-            gen_vecs = binornd(1,0.5,[dim num]);
+%             gen_vecs = binornd(1,0.5,[dim num]);
+            gen_vecs = single(rand([dim num],'single')>0.5);
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % BSDC
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                     
         case {'BSDC','BSDC_SHIFT','BSDC_25','BSDC_THIN'}
             
-            rand_values = double(rand([dim num]));
+            rand_values = rand([dim num],'single');
          
             % find the k highest idex (k correspond to
             % density)
@@ -105,7 +106,8 @@ function gen_vecs = generate_vectors(varargin)
             idx=sub2ind(size(rand_values),rows,repmat(1:size(rand_values,2),[size(rows,1) 1]));
             values(idx) = 1;
 
-            gen_vecs = double(values);
+            gen_vecs = single(values);
+            
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % BSDC-SEG
@@ -116,8 +118,8 @@ function gen_vecs = generate_vectors(varargin)
             num_segments = floor(dim*density);
             size_segments = floor(dim/num_segments);
             
-            z = zeros([size_segments num_segments num]);
-            rand_r = randi(size_segments,[num_segments num]);
+            z = zeros([size_segments num_segments num],'single');
+            rand_r = randi(size_segments,[num_segments num],'single');
             rand_c = repmat((1:num_segments)', [1 num]);
             rand_t = repmat(1:num,[num_segments 1]);
             indices = sub2ind(size(z),rand_r, rand_c, rand_t);
@@ -133,24 +135,18 @@ function gen_vecs = generate_vectors(varargin)
         % HRR
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                     
         case {'HRR','HRR_VTB','MBAT'}
-            rand_values=double(randn([dim num]));
+            gen_vecs = randn([dim num],'single')*sqrt(1/dim);
 
-            % set values
-            gen_vecs=double(rand_values*sqrt(1/dim));
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % HRR complex
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                     
-        case {'FHRR','FHRR_fft'}
-            rand_values=double(rand([dim num]));
-         
-            % set values
-            gen_vecs=double(rand_values*2*pi-pi);   
-            
+        case {'FHRR','FHRR_fft','FHRR_cos'}
+            gen_vecs = rand([dim num],'single')*2*pi-pi;
+                    
          
         otherwise
             disp('Representation is not defined!')
     end
-
     
 end

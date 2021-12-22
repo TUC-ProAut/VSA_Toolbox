@@ -30,7 +30,7 @@ function bundled_vectors = bundle_vectors(vsa, vectors_1, vectors_2, varargin)
  %                          dimension is used for addition
  %      vectors_2:          vectors to bundle (column-wise vector array)
  %      normalize:          if set (bool), the resulting vector will be
- %                          normalized after bundling (default if true)
+ %                          normalized after bundling (default is true)
  %      density:            density of the input vectors (important for
  %                          sparse vectors - CDT procedure)
  %      max_density:        maximum density after bundling (for BSDC
@@ -106,20 +106,17 @@ n_dim = numel(size(vectors_1));
             bundled_vectors = values;
         case {'BSDC'}
             % elementwise disjunction
-            bundled_vectors = double(sum(vector_array,n_dim)>=1);        
-        case {'BSDC_THIN'}
-            % elementwise disjunction
-            max_density = 0.5;
+            % if normalize true, thinning of the resulting bundle
             k = floor(max_density*size(vector_array,1));
-
+  
             values = sum(vector_array,n_dim);            
             if normalize
                 bundled_vectors = zeros([size(vector_array,1) 1]);
                 [~, idx] = maxk(values,k);
                 bundled_vectors(idx) = values(idx)>0;
             else
-                bundled_vectors = values;
-            end
+                bundled_vectors = double(values>=1);
+            end   
         case {'HRR', 'HRR_VTB','MBAT'}
             % elementwise addition 
             values = sum(vector_array,n_dim);
@@ -127,34 +124,26 @@ n_dim = numel(size(vectors_1));
                 values = values/norm(values);
             end
             bundled_vectors = values;
-        case {'FHRR','FHRR_fft'}
+        case {'FHRR'}
             % average angle 
-            % check if values already complex - if not convert angles to complex
-            % numbers
-            if isreal(vectors_1)
-                complex_vectors_1 = complex(cos(vectors_1),sin(vectors_1));
-            else
-                complex_vectors_1 = vectors_1;
-            end
-            if isreal(vectors_2)
-                complex_vectors_2 = complex(cos(vectors_2),sin(vectors_2));
-            else
-                complex_vectors_2 = vectors_2;
-            end
-            complex_vector_array = [complex_vectors_1, complex_vectors_2];
-            values = sum(complex_vector_array,n_dim);
+
+            vectors = zeros(size(vectors_1,1),size(vectors_1,2)+size(vectors_2,2));
+            vectors = [vectors_1, vectors_2];
+            
+            vcos = cos(vectors);
+            vsin = sin(vectors);
+            
+            vcos_sum = sum(vcos,n_dim);
+            vsin_sum = sum(vsin,n_dim);          
+            
             if normalize
-                values = angle(values);
+                values = atan2(vsin_sum,vcos_sum);
+            else
+                values = complex(vcos,vsin);
             end
             bundled_vectors = values;
-        case 'FHRR_full'
-            values = sum(vector_array,n_dim);
-            if normalize
-                 values = normalize(values);
-            end
-            bundled_vectors = values
-        case {'BSDC_25','BSDC_SHIFT'}
-            % elementwise disjunction and CDT procedure
+        case {'BSDC_SHIFT'}
+            % elementwise disjunction 
             % select the k highest values (k is computed with the density)
             k = floor(max_density*size(vector_array,1));
             
@@ -164,7 +153,7 @@ n_dim = numel(size(vectors_1));
                 [~, idx] = maxk(values,k);
                 bundled_vectors(idx) = values(idx)>0;
             else
-                bundled_vectors = values;
+                bundled_vectors = single(values>0);
             end
          case 'BSDC_SEG'
             num_segments = floor(dim*density);
@@ -190,5 +179,6 @@ n_dim = numel(size(vectors_1));
             
         otherwise
             disp('Representation is not defined!')
-    end
+     end
+    bundled_vectors = single(bundled_vectors);
 end
