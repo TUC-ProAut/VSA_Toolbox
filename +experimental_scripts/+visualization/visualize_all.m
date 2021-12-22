@@ -57,15 +57,14 @@ end
 
 
 % chose vsa to plot 
-% choice={'MAP_B';'MAP_C'; 'HRR'; 'FHRR'; 'HRR_VTB'; 'BSC'; 'BSDC_SHIFT'}; % are the VSA of the comparison paper
 choice_boundpairs={'MAP_B';'MAP_C'; 'MAP_I'; 'HRR'; 'HRR_VTB'; 'MBAT'; 'FHRR'; 'BSC'; 'BSDC_SHIFT'; 'BSDC_SEG'}; % are the VSA of the comparison paper
 choice_repBind = {'MAP_C'; 'HRR';'HRR_VTB'};
-choice_cap={'MAP_B';'MAP_C'; 'MAP_I'; 'HRR'; 'FHRR'; 'BSC'; 'BSDC_SHIFT';'BSDC_THIN'}; % are the VSA of the comparison paper
-choice_lang={'MAP_B';'MAP_C'; 'HRR'; 'HRR_VTB'; 'FHRR'; 'BSC'; 'BSDC_SHIFT'; 'BSDC_SEG';'MBAT'}; % are the VSA of the comparison paper
+choice_cap={'MAP_B';'MAP_C'; 'MAP_I'; 'HRR'; 'FHRR'; 'BSC'; 'BSDC_SHIFT'}; % are the VSA of the comparison paper
+choice_lang={'MAP_B';'MAP_C'; 'MAP_I'; 'HRR'; 'HRR_VTB';'MBAT' ; 'FHRR'; 'BSC'; 'BSDC_SHIFT'; 'BSDC_SEG'}; % are the VSA of the comparison paper
 
-names_mapping_cap = containers.Map(choice_cap,{'MAP-B';'MAP-C'; 'MAP-I'; 'HRR, VTB, MBAT';'FHRR';'BSC';'BSDC-S, BSDC-SEG, BSDC-CDT';'BSDC-THIN'});
+names_mapping_cap = containers.Map(choice_cap,{'MAP-B';'MAP-C'; 'MAP-I'; 'HRR, VTB, MBAT';'FHRR';'BSC';'BSDC-S, BSDC-SEG, BSDC-CDT'});
 names_mapping_boundpairs = containers.Map(choice_boundpairs,{'MAP-B';'MAP-C'; 'MAP-I'; 'HRR'; 'VTB'; 'MBAT';'FHRR';'BSC';'BSDC-S'; 'BSDC-SEG'});
-
+names_mapping_lang_rec = containers.Map(choice_lang,{'MAP-B';'MAP-C'; 'MAP-I'; 'HRR'; 'VTB'; 'MBAT';'FHRR';'BSC';'BSDC-S'; 'BSDC-SEG'});
 
 %% plot results
 

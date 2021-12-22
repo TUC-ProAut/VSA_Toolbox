@@ -27,20 +27,19 @@ close all
 
 vsa_dict={};
 % chose the appropriate VSAs
-if 1, vsa_dict{end+1,1}='MAP_B'; end;
-if 1, vsa_dict{end+1,1}='MAP_C'; end;
-if 1, vsa_dict{end+1,1}='MAP_I'; end; 
-if 1, vsa_dict{end+1,1}='HRR'; end;
-if 1, vsa_dict{end+1,1}='FHRR'; end;
-if 1, vsa_dict{end+1,1}='HRR_VTB'; end;
-if 1, vsa_dict{end+1,1}='BSC'; end;
-if 1, vsa_dict{end+1,1}='BSDC_SHIFT'; end;
-if 1, vsa_dict{end+1,1}='BSDC'; end;
-if 1, vsa_dict{end+1,1}='BSDC_SEG'; end; 
-if 1, vsa_dict{end+1,1}='BSDC_THIN'; end;
-if 1, vsa_dict{end+1,1}='MBAT'; end;
+if 1, vsa_dict{end+1,1} = 'MAP_B'; end;
+if 1, vsa_dict{end+1,1} = 'MAP_C'; end;
+if 1, vsa_dict{end+1,1} = 'MAP_I'; end; 
+if 1, vsa_dict{end+1,1} = 'HRR'; end;
+if 1, vsa_dict{end+1,1} = 'FHRR'; end;
+if 1, vsa_dict{end+1,1} = 'HRR_VTB'; end;
+if 1, vsa_dict{end+1,1} = 'BSC'; end;
+if 1, vsa_dict{end+1,1} = 'BSDC_SHIFT'; end;
+if 1, vsa_dict{end+1,1} = 'BSDC'; end;
+if 1, vsa_dict{end+1,1} = 'BSDC_SEG'; end; 
+if 1, vsa_dict{end+1,1} = 'MBAT'; end;
 
-number_iterations=10; % for statisitcal evaluation (mean, variance of the experiments)
+number_iterations = 10; % for statisitcal evaluation (mean, variance of the experiments)
 
 
 %% check properties of given vsa's
@@ -64,9 +63,7 @@ results_path=[workspace_path 'experimental_results/'];
  
 %% define empty results arrays
 
-results_capacity_mean=cell([size(vsa_dict,1) 1]);
-results_capacity_var=cell([size(vsa_dict,1) 1]);
-results_capacity_analytical=cell([size(vsa_dict,1) 1]);
+results_capacity = cell([size(vsa_dict,1) 1]);
 results_bindpairs_mean=cell([size(vsa_dict,1) 1]);
 results_bindpairs_var=cell([size(vsa_dict,1) 1]);
 results_bind_unbind1_mean=cell([size(vsa_dict,1) 1]);
@@ -96,8 +93,16 @@ for i=1:size(vsa_dict,1)
     %% capacity computing (k nearest nighbors)
     if check_bundle_capacity
         disp('---- check bundling capacity ----')
-        
-        experimental_scripts.bundle_capacity
+        fix_number = 1; % set 1 if use a fixed number of stored items, else 0 for vary the item memory size
+        if fix_number
+            % fix number of stored item (1000)
+            item_memory_size = 1000;
+            experimental_scripts.bundle_capacity
+        else
+            % variable number of stored item 
+            item_memory_size = [15 20 30 50 100 200 300 500]% 1000 2000 3000 5000 10000 1e5 1e6];
+            experimental_scripts.bundle_capacity
+        end
     end
 
     %% binding k pairs and retrive them

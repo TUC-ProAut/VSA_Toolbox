@@ -31,59 +31,68 @@
 
 
 % params
-item_memory_size=1000;
-k_range=3:2:51;
-dim_range_cap=[2:2:40].^2;
-
-prob_correct_tensor=zeros([numel(dim_range_cap),numel(k_range),number_iterations]); % init tensor for saving the results
+k_range = 2:2:51;
+dim_range_cap = [2:2:34].^2; 
+prob_correct_tensor = zeros([numel(dim_range_cap),numel(k_range),numel(item_memory_size),number_iterations]); % init tensor for saving the results
 
 %% experimental capacity 
+
+
 for it=1:number_iterations
-    prob_correct_array=[];        
-
+    prob_correct_memory_size = [];
     disp(['iteration: ' num2str(it)])
- 
-    % iterate over dimension
-    for d_idx=1:numel(dim_range_cap)
-          
-        % fill data base (item memory)
-        VSA=vsa_env('vsa',vsa_dict{i,1},'dim',dim_range_cap(d_idx));
-        VSA.add_vector('num',item_memory_size);
+    
+    % iterate over dimension - item_mem ratio
+    for r = 1:numel(item_memory_size)
+    
+        prob_correct_array = zeros([numel(dim_range_cap),numel(k_range)]);  
 
-        prob_correct_answer=zeros([1 numel(k_range)]);
-        
-        % calculate the complete range of k 
-        item_names = VSA.item_mem{1,2};
-        parfor k_idx=1:numel(k_range)
-            k=k_range(k_idx);
-            bundle_names=datasample(item_names,k,'Replace',false);
-            
-            % sample the k vectors out of the item memory
-            idx = find(ismember(item_names,bundle_names));
-            
-            bundle_vectors = VSA.item_mem{1,1}(:,idx);
+        % iterate over dimension
+        parfor d_idx=1:numel(dim_range_cap)
+            memory_size = item_memory_size(r);
 
-            % one-step bundling:
-            bundle=VSA.bundle(bundle_vectors,[]);
+            % fill data base (item memory)
+            VSA=vsa_env('vsa',vsa_dict{i,1},'dim',dim_range_cap(d_idx));
+            VSA.add_vector('num',memory_size,'return_vector',0);
 
-            % find the k nearest vectors to bundle 
-            [vec, names, sim]=VSA.find_k_nearest(bundle,k);
+            prob_correct_answer=zeros([1 numel(k_range)]);
 
-            % check if the k similarest vectors are correct
-            num_correct=numel(find(ismember(names,bundle_names)));
+            % calculate the complete range of k 
+            item_names = VSA.item_mem{1,2};
+            for k_idx=1:nnz(k_range<memory_size)
+                k=k_range(k_idx);
+                [bundle_names, idx] = datasample(item_names,k,'Replace',false);
 
-            prob_correct_answer(k_idx)=num_correct/k;
+                bundle_vectors = VSA.item_mem{1,1}(:,idx);
+
+                % one-step bundling:
+                switch vsa_dict{i,1}
+                    case {'BSDC_SHIFT','BSDC','BSDC_25'}
+                        bundle = VSA.bundle(bundle_vectors,[],0); % if BSDC, use only overlap (no normalization)
+                    otherwise 
+                        bundle = VSA.bundle(bundle_vectors,[]);
+                end
+                % find the k nearest vectors to bundle 
+                [vec, names, sim]=VSA.find_k_nearest(bundle,k);
+
+                % check if the k similarest vectors are correct
+                num_correct=numel(find(ismember(names,bundle_names)));
+
+                prob_correct_answer(k_idx)=num_correct/k;
+            end
+
+            prob_correct_array(d_idx,:) = prob_correct_answer;
+
         end
 
-        prob_correct_array=[prob_correct_array; prob_correct_answer];
-
+        prob_correct_memory_size(:,:,r) = prob_correct_array;
     end
 
     % concat each iteration to one tensor
-    prob_correct_tensor(:,:,it)= prob_correct_array;
+    prob_correct_tensor(:,:,:,it)= prob_correct_memory_size;
 
 end
-
+    
 % compute mean and variance    
-results_capacity_mean{i}=[results_capacity_mean{i}; mean(prob_correct_tensor,3)];
-results_capacity_var{i}=[results_capacity_var{i}; var(prob_correct_tensor,1,3)];
+results_capacity{i} = prob_correct_tensor;
+
