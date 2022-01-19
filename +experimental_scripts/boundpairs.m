@@ -90,7 +90,7 @@ for it=1:number_iterations
 
         end
         
-        prob_correct_array(d_idx,:) = prob_correct_answer;
+        prob_correct_array(d_idx,:) = prob_correct;
 
     end
 
